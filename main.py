@@ -43,6 +43,7 @@ while True:
     # getting update_id and message object
     current_id, message = getLastUpdates()
     if current_id!=last_id:
+        #storing last update_id
         last_id = current_id
         #chat id
         chat_id = message['chat']['id']
