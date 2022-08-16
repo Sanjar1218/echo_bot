@@ -37,6 +37,18 @@ def getLastUpdates() -> tuple:
     r = requests.get(url).json()['result'][-1]
     return r['update_id'], r['message']
 
+def sendDocument(chat_id: int, document: str) -> dict:
+    """
+    args:
+        chat_id: int
+        document: str
+    return:
+        json object
+    """
+    url = f'{URL}/sendDocument'
+    payload = {'chat_id': chat_id, 'document': document}
+    r = requests.post(url, params=payload)
+    return r.json()
 
 last_id = -1
 while True:
@@ -47,12 +59,18 @@ while True:
         last_id = current_id
         #chat id
         chat_id = message['chat']['id']
-        # checks that photo object exist or not
+        # checks that photo object exist or not if exist then send photo
         if 'photo' in message.keys():
             #photo_id
             photo_id = message['photo'][0]['file_id']
             #sending_photo
             sendPhoto(chat_id, photo_id)
+            continue
+        elif 'document' in message.keys():
+            #document_id
+            document_id = message['document']['file_id']
+            #sending_document
+            sendDocument(chat_id, document_id)
             continue
         #text that send to bot
         text = message['text']
